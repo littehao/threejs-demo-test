@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>TestCurveLine</title>
+</head>
+<body>
+<script type="importmap">
+ {
+  "imports": {
+   "three": "../three.js-r148/build/three.module.js",
+   "three/addons/": "../three.js-r148/examples/jsm/",
+   "@tweenjs/tween.js": "../tween/tween.esm.js"
+  }
+ }
+ 
+</script>
+ 
+<script type="module">
+ 
+	import * as THREE from 'three';
+ 
+	import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+	import Stats from 'three/addons/libs/stats.module.js';
+	import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+	import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+	import { Line2 } from 'three/addons/lines/Line2.js';
+ 
+	let scene, camera, renderer, stats;
+ 
+	let POSITION_A;
+	let POSITION_B;
+	let POSITION_Center;
+	let targetDegreeT1;
+	let targetDegreeT2;
+	const radius = 5;
+ 
+	init();
+	animate();
+ 
+	function init() {
+ 
+		// scene
+		initScene();
+ 
+		// camera
+		initCamera();
+ 
+ 
+		// light
+		initLight();
+ 
+		// renderer
+		initRenderer();
+ 
+		// OrbitControls
+		initOrbitControls();
+ 
+		stats = new Stats();
+		document.body.appendChild( stats.dom );
+ 
+		// onWindowResize
+		window.addEventListener( 'resize', onWindowResize );
+ 
+ 
+		axiesHelper();
+ 
+		stats = new Stats();
+		document.body.appendChild( stats.dom );
+ 
+		// window.location.href = renderer.domElement.toDataURL( 'image/png' );
+ 
+		addTestRoateLineObject();
+	}
+ 
+	function onWindowResize() {
+ 
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+ 
+	}
+ 
+	function initScene() {
+ 
+		scene = new THREE.Scene();
+ 
+	}
+ 
+	function initCamera() {
+ 
+		camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 200 );
+		camera.position.set( 0, 0, 25 );
+ 
+	}
+ 
+	function initLight() {
+ 
+		const ambientLight = new THREE.AmbientLight( 0xcccccc, 0.4 );
+		scene.add( ambientLight );
+ 
+		const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.6 );
+		directionalLight.position.set( - 1, 1, 100 );
+		scene.add( directionalLight );
+ 
+	}
+ 
+	function initRenderer() {
+ 
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setClearColor( 0xcccccc );
+		document.body.appendChild( renderer.domElement );
+ 
+	}
+ 
+	function initOrbitControls() {
+ 
+		const controls = new OrbitControls( camera, renderer.domElement );
+		controls.minDistance = 5;
+		controls.maxDistance = 50;
+		controls.enablePan = false; // 移动 禁止
+ 
+	}
+ 
+	function animate() {
+ 
+		requestAnimationFrame( animate );
+		stats.update();
+		render();
+ 
+ 
+	}
+ 
+	function axiesHelper() {
+ 
+		var helper = new THREE.AxesHelper( 20 );
+		scene.add( helper );
+ 
+	}
+ 
+	function render() {
+ 
+		renderer.render( scene, camera );
+ 
+	}
+ 
+ 
+	function addTestRoateLineObject() {
+		const Degree_A = Math.PI / 4 * 3;
+		POSITION_A = new THREE.Vector3( radius * Math.cos( Degree_A ), radius * Math.sin( Degree_A ), 0 );
+ 
+		const Degree_B = Math.PI / 8;
+		POSITION_B = new THREE.Vector3( radius * Math.cos( Degree_B ), radius * Math.sin( Degree_B ), 0 );
+		POSITION_Center = new THREE.Vector3( 0, 0, 0 );
+ 
+		var geometry = new THREE.SphereGeometry( 4, 30 ); //矩形平面
+		var material = new THREE.MeshPhongMaterial( {} );
+		var spheremesh1 = new THREE.Mesh( geometry, material );
+		spheremesh1.position.set( POSITION_Center.x, POSITION_Center.y, POSITION_Center.z );
+		scene.add( spheremesh1 );
+ 
+		var geometryA = new THREE.SphereGeometry( 1, 30 ); //矩形平面
+		var materialA = new THREE.MeshPhongMaterial( {
+			color: '#cc0000'
+		} );
+		var spheremeshA = new THREE.Mesh( geometryA, materialA );
+		spheremeshA.position.set( POSITION_A.x, POSITION_A.y, POSITION_A.z );
+		scene.add( spheremeshA );
+		var geometryB = new THREE.SphereGeometry( 1, 30 ); //矩形平面
+		var materialB = new THREE.MeshPhongMaterial( {
+			color: '#cc00cc'
+		} );
+		var spheremeshB = new THREE.Mesh( geometryB, materialB );
+ 
+		spheremeshB.position.set( POSITION_B.x, POSITION_B.y, POSITION_B.z );
+		scene.add( spheremeshB );
+ 
+		rotateLineDataT1T2();
+ 
+	}
+ 
+	function rotateLineDataT1T2() {
+ 
+		const v1T1 = new THREE.Vector3( POSITION_A.x, POSITION_A.y, POSITION_A.z );
+		const v2T1 = new THREE.Vector3( POSITION_B.x, POSITION_B.y, POSITION_B.z );
+		targetDegreeT1 = v1T1.angleTo( v2T1 );
+		console.log( 'targetDegreeT1 ' + targetDegreeT1 );
+		const fromDegreeT1 = v2T1.angleTo( new THREE.Vector3( radius, 0, 0 ) );
+		console.log( 'fromDegreeT1 ' + fromDegreeT1 );
+		const toDegreeT1 = fromDegreeT1 + targetDegreeT1;
+ 
+		const v1T2 = new THREE.Vector3( POSITION_A.x, POSITION_A.y, POSITION_A.z );
+		const v2T2 = new THREE.Vector3( POSITION_B.x, POSITION_B.y, POSITION_B.z );
+		targetDegreeT2 = v2T2.angleTo( v1T2 );
+		console.log( 'targetDegreeT2 ' + targetDegreeT2 );
+		const modifyDegree = Math.PI * 2 - targetDegreeT2;
+		console.log( modifyDegree );
+		const fromDegreeT2 = toDegreeT1;
+		const toDegreeT2 = modifyDegree + fromDegreeT2;
+ 
+		scene.add(drawCurveLine( radius, 50, fromDegreeT1, toDegreeT1, 1, 0, 0 ));
+ 
+		scene.add(drawCurveLine( radius, 100, fromDegreeT2, toDegreeT2, 0, 1, 0 ));
+ 
+	}
+ 
+	function drawCurveLine( radius, segment, fromDegree, toDegree, colorR, colorG, colorB ) {
+ 
+		var geometry = new LineGeometry(); //声明一个几何体对象Geometry
+		var R = radius; // 圆弧半径
+		var N = segment; // 分段数量
+		const perAddDegree = ( toDegree - fromDegree ) / segment;
+		console.log( 'perAddDegree ' + perAddDegree );
+		const positionArray = [];
+		const colors = [];
+ 
+		// 批量生成圆弧上的顶点数据
+		for ( let i = 0; i < N; i ++ ) {
+			var angle = fromDegree + perAddDegree * i;
+			var x = R * Math.cos( angle );
+			var y = R * Math.sin( angle );
+			var z = 0;
+			positionArray.push( x, y, z );
+			colors.push( colorR, colorG, colorB );
+		}
+ 
+		geometry.setPositions( positionArray );
+		geometry.setColors( colors );
+ 
+		const matLine = new LineMaterial( {
+ 
+			color: 0xffffff,
+			linewidth: 0.01, // in world units with size attenuation, pixels otherwise
+			vertexColors: true,
+ 
+			//resolution:  // to be set by renderer, eventually
+			dashed: false,
+			alphaToCoverage: true,
+ 
+		} );
+ 
+		const line = new Line2( geometry, matLine );
+ 
+		return line;
+ 
+	}
+ 
+ 
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>3d模型测试</title>
+ <style>
+  body{
+      overflow: hidden;
+      margin: 0px;
+  }
+  #openBtn{
+    position: absolute;
+    top:10px;
+    left:10px;
+    z-index: 1;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <button id="openBtn">开门/关门</button>
+
+ <script type="importmap">
+  {
+    "imports": {
+      "three": "../three.js-r148/build/three.module.js",
+      "three/addons/": "../three.js-r148/examples/jsm/",
+      "@tweenjs/tween.js": "../tween/tween.esm.js"
+    }
+  }
+</script>
+<script src="./index.js" type="module">  </script>
+</body>
+</html>

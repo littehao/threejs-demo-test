@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3d展厅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            overflow: hidden;
+        }
+        li{
+            margin-left: 10px;
+            border: 1px solid cornflowerblue;
+            border-radius: 90px;
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            line-height: 60px;
+            cursor: pointer;
+            font-size:12px;
+        }
+        .borderBox{
+        width:250px;
+        border: 1px solid transparent;
+        padding:10px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+        background-color: #020721;
+        box-shadow:inset 0 0 40px #122f85;
+        position: absolute;
+        /* left:280px; */
+        /* top:-100px; */
+        }
+        .borderBox::before{
+        display: block;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 2px solid rgba(114, 215, 255, 1);
+        border-right: 0;
+        border-bottom: 0;
+        position: absolute;
+        top: -1px;
+        left: -1px;
+        }
+        .borderBox::after{
+        display: block;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 2px solid rgba(114, 215, 255, 1);
+        border-left: 0;
+        border-bottom: 0;
+        position: absolute;
+        top: -1px;
+        right: -1px;
+        }
+        .borderBox> .border-content::before{
+        display: block;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 2px solid rgba(114, 215, 255, 1);
+        border-right: 0;
+        border-top: 0;
+        position: absolute;
+        bottom: -1px;
+        left: -1px;
+        }
+        .borderBox> .border-content::after{
+        display: block;
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 2px solid rgba(114, 215, 255, 1);
+        border-left: 0;
+        border-top: 0;
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        }
+        .deviceTag .container{
+            display: flex;
+            align-items: center;
+            color:#fff;
+            padding:2px 0;
+        }
+        .deviceTag .container div{
+            font-size: 12px;
+        }
+        .deviceTag .container div:first-child{
+            padding-right: 10px;
+        }
+        .line{
+            width:100px;
+            position: absolute;
+            top:70px;
+            left:-100px;
+        }
+        .close{
+            position: absolute;
+            right: 0;
+            top:5px;
+            margin-right: 5px;
+        }
+        .tag{
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            color:#fff;
+            font-size: 12px;
+            padding: 2px 10px;
+            position: absolute;
+        }
+        .devicePic{
+            position: absolute;
+            color:#fff;
+        }
+    </style>
+</head>
+
+<body>
+    <ul style="position: fixed; right: 20%; top: 20px; list-style: none; color: #FFFFFF; display: flex;">
+        <li id="topPos">上帝视角</li>
+        <li id="fontPos">特殊视角</li>
+        <li id="leftPos">视角1</li>
+        <li id="rightPos">视角2</li>
+        <li id="restPos">重置位置</li>
+        <li id="isRotation">旋转</li>
+        <li id="infoflow">信息流</li>
+        <li id="back">返回</li>
+    </ul>
+
+    <div id="deviceTag1"  class="borderBox" style="visibility:hidden;" >
+        <div class="deviceTag" >
+            <div class="container">
+                <div>设备类型:</div>
+                <div>光配机</div>
+            </div>
+            <div class="container">
+                <div>设备名称:</div>
+                <div>2023062903</div>
+            </div>
+            <div class="container">
+                <div>设备型号:</div>
+                <div>AFS-A-192</div>
+            </div>
+            <div class="container">
+                <div>在线状态:</div>
+                <div>在线</div>
+            </div>
+            <div class="container">
+                <div>运行状态:</div>
+                <div>空闲</div>
+            </div>
+            <div class="container">
+                <div>标称容量:</div>
+                <div>192</div>
+            </div>
+        </div>
+        <!-- <img class="close" src="./imgs/close.png" alt="" width="18"> -->
+        <img src="../imgs/line.png" alt="" class="line">
+        <div class="border-content"></div>
+    </div>
+
+
+    <div id="fsu" class="tag" style="visibility:hidden;"><span>FSU</span></div>
+    <div id="device1" class="tag" style="visibility:hidden;"><span>设备1</span></div>
+
+    <span id="devicePic" class="iconfont devicePic">&#x33;</span>
+
+    
+    <!-- type="importmap"功能：.html文件中也能和nodejs开发环境中一样方式，引入npm安装的js库 -->
+    <script type="importmap">
+        {
+			"imports": {
+				"three": "../three.js-r148/build/three.module.js",
+                "three/addons/": "../three.js-r148/examples/jsm/",
+                "@tweenjs/tween.js": "../tween/tween.esm.js"
+			}
+		}
+	</script>
+    <script src="./index.js" type="module"></script>
+</body>
+
+</html>
